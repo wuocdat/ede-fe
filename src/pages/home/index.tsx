@@ -1,5 +1,5 @@
-const Home = () => {
+const Translation = () => {
   return <div>Home</div>;
 };
 
-export default Home;
+export default Translation;
