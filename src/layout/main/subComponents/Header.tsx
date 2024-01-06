@@ -1,12 +1,12 @@
 import styled from "@emotion/styled";
-import { COLORS } from "../../../theme/colors";
 import { Box, Button, Stack, Typography } from "@mui/material";
-import { APP_NAME, HEAD_TABS } from "../../../utils/constants";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { StyledTab, StyledTabs } from "./Tabs";
-import { WhiteButton } from "../../../components/share/Buttons";
+import { WhiteButton } from "@/components/share/Buttons";
+import { APP_NAME, HEAD_TABS } from "@/utils/constants";
+import { COLORS } from "@/theme/colors";
 
 const RootContainer = styled.div`
   display: flex;
