@@ -4,7 +4,11 @@ import Header from "./subComponents/Header";
 
 const MainLayout = () => {
   return (
-    <Box width="100vw" height="100vh">
+    <Box
+      width="100vw"
+      height="100vh"
+      sx={{ display: "flex", flexDirection: "column" }}
+    >
       <Header />
       <Outlet />
     </Box>
