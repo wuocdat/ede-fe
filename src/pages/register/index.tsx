@@ -119,7 +119,7 @@ const Register = () => {
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="#" variant="body2" style={{color: "black", textDecorationColor: "none"}}>
-                  Đã có tài khoản? Đăng nhập
+                  {"Đã có tài khoản? Đăng nhập"}
                 </Link>
               </Grid>
             </Grid>

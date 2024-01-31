@@ -85,7 +85,7 @@ const Login = () => {
               </Grid>
               <Grid item>
                 <Link href="#" variant="body2" style={{color: "black", textDecorationColor: "none"}}>
-                  Không có tài khoản? Đăng kí"
+                  {"Không có tài khoản? Đăng kí"}
                 </Link>
               </Grid>
             </Grid>
