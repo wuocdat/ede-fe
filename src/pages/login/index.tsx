@@ -37,7 +37,7 @@ const Login = () => {
             alignItems: 'center',
           }}
         >
-          <Avatar>
+          <Avatar style={{backgroundColor: "black"}}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -73,18 +73,19 @@ const Login = () => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              style={{backgroundColor: "black"}}
             >
               Đăng nhập
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Link href="#" variant="body2" style={{color: "black", textDecorationColor: "none"}}>
                   Quên mật khẩu?
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
-                  {"Không có tài khoản? Đăng kí"}
+                <Link href="#" variant="body2" style={{color: "black", textDecorationColor: "none"}}>
+                  Không có tài khoản? Đăng kí"
                 </Link>
               </Grid>
             </Grid>

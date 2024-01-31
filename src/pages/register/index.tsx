@@ -38,7 +38,7 @@ const Register = () => {
             alignItems: 'center',
           }}
         >
-          <Avatar >
+          <Avatar style={{backgroundColor: "black"}}>
             {/* <LockOutlinedIcon /> */}
             <LockPersonOutlinedIcon fontSize='medium'/>
           </Avatar>
@@ -112,12 +112,13 @@ const Register = () => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              style={{backgroundColor: "black"}}
             >
               Đăng kí
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="#" variant="body2" style={{color: "black", textDecorationColor: "none"}}>
                   Đã có tài khoản? Đăng nhập
                 </Link>
               </Grid>

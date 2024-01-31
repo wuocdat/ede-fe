@@ -48,10 +48,11 @@ const Header = () => {
       </Box>
       <Stack direction="row" alignItems="center" gap={3}>
         <SettingsIcon sx={{ color: "white" }} />
-        <Button variant="text" sx={{ color: "white" }}>
+        {/* <Button variant="text" sx={{ color: "white" }}>
           Đăng nhập
         </Button>
-        <WhiteButton variant="contained">Đăng ký</WhiteButton>
+        <WhiteButton variant="contained">Đăng ký</WhiteButton> */}
+        
       </Stack>
     </RootContainer>
   );
