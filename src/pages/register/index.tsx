@@ -9,6 +9,7 @@ import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import LockPersonOutlinedIcon from '@mui/icons-material/LockPersonOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -37,8 +38,9 @@ const Register = () => {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
+          <Avatar >
+            {/* <LockOutlinedIcon /> */}
+            <LockPersonOutlinedIcon fontSize='medium'/>
           </Avatar>
           <Typography component="h1" variant="h5">
             Đăng kí tài khoản
@@ -84,6 +86,17 @@ const Register = () => {
                   label="Mật khẩu"
                   type="password"
                   id="password"
+                  autoComplete="new-password"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="re_password"
+                  label="Nhập lại mật khẩu"
+                  type="password"
+                  id="re_password"
                   autoComplete="new-password"
                 />
               </Grid>
