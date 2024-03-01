@@ -1,28 +1,51 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import * as React from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import AuthServices from "@/service/auth.services";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const defaultTheme = createTheme();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+      username: data.get("username"),
+      password: data.get("password"),
     });
+    const username = data.get("username");
+    const password = data.get("password");
+    if (!username) {
+      toast.error("Chưa điền tên đăng nhập");
+      return;
+    }
+    if (!password) {
+      toast.error("Chưa nhập mật khẩu");
+      return;
+    }
+
+    try {
+      await AuthServices.login({
+        username: username.toString(),
+        password: password.toString(),
+      });
+      toast.success("Đăng nhập thành công");
+    } catch (error) {
+      console.log(error);
+      toast.error("Đăng nhập không thành công");
+    }
   };
 
   return (
@@ -32,12 +55,12 @@ const Login = () => {
         <Box
           sx={{
             marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          <Avatar style={{backgroundColor: "black"}}>
+          <Avatar style={{ backgroundColor: "black" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -48,10 +71,10 @@ const Login = () => {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Địa chỉ email"
-              name="email"
-              autoComplete="email"
+              id="username"
+              label="Tên đăng nhập"
+              name="username"
+              autoComplete="username"
               autoFocus
             />
             <TextField
@@ -73,18 +96,26 @@ const Login = () => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              style={{backgroundColor: "black"}}
+              style={{ backgroundColor: "black" }}
             >
               Đăng nhập
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2" style={{color: "black", textDecorationColor: "none"}}>
+                <Link
+                  href="#"
+                  variant="body2"
+                  style={{ color: "black", textDecorationColor: "none" }}
+                >
                   Quên mật khẩu?
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2" style={{color: "black", textDecorationColor: "none"}}>
+                <Link
+                  href="#"
+                  variant="body2"
+                  style={{ color: "black", textDecorationColor: "none" }}
+                >
                   {"Không có tài khoản? Đăng kí"}
                 </Link>
               </Grid>
