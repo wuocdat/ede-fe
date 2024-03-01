@@ -21,7 +21,7 @@ const Header = () => {
 
   const navigate = useNavigate();
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
     navigate(HEAD_TABS[newValue].path, { replace: true });
   };
