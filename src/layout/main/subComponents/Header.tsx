@@ -7,9 +7,9 @@ import { StyledTab, StyledTabs } from "./Tabs";
 import { WhiteButton } from "@/components/share/Buttons";
 import { APP_NAME, HEAD_TABS } from "@/utils/constants";
 import { COLORS } from "@/theme/colors";
-import * as React from 'react';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import * as React from "react";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 const RootContainer = styled.div`
   display: flex;
@@ -21,7 +21,7 @@ const RootContainer = styled.div`
 
 const Header = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  
+
   const open = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -51,13 +51,9 @@ const Header = () => {
         {APP_NAME}
       </Typography>
       <Box sx={{ flex: 1, margin: "auto" }}>
-        <StyledTabs
-          value={value}
-          onChange={handleChange}
-          aria-label="styled tabs example"
-        >
-          {HEAD_TABS.map((item) => (
-            <StyledTab label={item.title} />
+        <StyledTabs value={value} onChange={handleChange} aria-label="styled tabs example">
+          {HEAD_TABS.map((item, index) => (
+            <StyledTab key={index} label={item.title} />
           ))}
         </StyledTabs>
       </Box>
@@ -69,12 +65,12 @@ const Header = () => {
         <WhiteButton variant="contained">Đăng ký</WhiteButton> */}
         <div>
           <Button
-            variant="text" 
+            variant="text"
             sx={{ color: "white" }}
             id="basic-button"
-            aria-controls={open ? 'basic-menu' : undefined}
+            aria-controls={open ? "basic-menu" : undefined}
             aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
+            aria-expanded={open ? "true" : undefined}
             onClick={handleClick}
           >
             Nguyen Van A
@@ -85,15 +81,15 @@ const Header = () => {
             open={open}
             onClose={handleClose}
             MenuListProps={{
-              'aria-labelledby': 'basic-button',
+              "aria-labelledby": "basic-button",
             }}
             anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'center',
+              vertical: "bottom",
+              horizontal: "center",
             }}
             transformOrigin={{
-              vertical: 'top',
-              horizontal: 'center',
+              vertical: "top",
+              horizontal: "center",
             }}
           >
             <MenuItem onClick={handleClose}>Tài khoản</MenuItem>
