@@ -118,8 +118,7 @@ const Translation = () => {
     if (trans && trans.vi_text) {
       try {
         await TransService.updateTransById(trans.id, { vi_text: trans.vi_text, correct: true });
-        toast.success("Đã cập nhật thành công");
-        setTrans(null);
+        toast.success("Đã cập nhật thành công", { autoClose: 1000 });
         fetchIncorrectTrans();
       } catch (error) {
         console.log(error);

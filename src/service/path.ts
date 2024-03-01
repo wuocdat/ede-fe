@@ -6,4 +6,6 @@ export const API_PATH = {
   // translation
   INCORRECT_TRANS: "/translation/incorrect-trans",
   TRANSLATION: "/translation",
+  UPLOAD: "/translation/upload",
+  PRE_DATA_UPLOAD: "/translation/many-trans",
 };

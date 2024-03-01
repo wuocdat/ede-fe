@@ -2,8 +2,8 @@ export const APP_NAME = "Ede-Trans";
 
 export const HEAD_TABS = [
   {
-    title: "Từ điển",
-    path: "/dic",
+    title: "Thêm bản dịch",
+    path: "/data",
   },
   {
     title: "Dịch",

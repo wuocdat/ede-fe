@@ -40,7 +40,7 @@ const Header = () => {
     navigate("/auth/login");
   };
 
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(1);
 
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);

@@ -5,11 +5,12 @@ import Register from "../pages/register";
 import AuthLayout from "../layout/auth";
 import MainLayout from "../layout/main";
 import Protected from "@/pages/ProtectedPage";
+import DataPage from "@/pages/data";
 
 export const PAGES_PATH = {
   SIGN_IN: "/auth/login",
   SIGN_UP: "/auth/register",
-  DIC: "/dic",
+  DATA: "/data",
   TRANS: "/trans",
   COMMUNITY: "/community",
   ALL: "*",
@@ -24,8 +25,8 @@ const router = createBrowserRouter([
         element: <Translation />,
       },
       {
-        path: PAGES_PATH.DIC,
-        element: <Translation />,
+        path: PAGES_PATH.DATA,
+        element: <DataPage />,
       },
       {
         path: PAGES_PATH.COMMUNITY,

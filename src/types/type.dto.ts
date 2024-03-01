@@ -19,3 +19,12 @@ export type UpdateTransDto = {
   vi_text?: string;
   correct?: boolean;
 };
+
+export type PreTransDto = {
+  ede_text?: string;
+  vi_text?: string;
+};
+
+export type PreDataUploadResDto = {
+  savedTransNum: number;
+};
