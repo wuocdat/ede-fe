@@ -22,6 +22,17 @@ interface TranslationFormProps {
   bottomActions?: React.ReactNode;
 }
 
+// const SaveButton: FC<ButtonProps> = (props) => (
+//   <Button
+//     variant="contained"
+//     startIcon={<Save />}
+//     sx={{ float: "right", mr: "20px", mb: "8px" }}
+//     {...props}
+//   >
+//     Lưu
+//   </Button>
+// );
+
 const TranslationForm: FC<TranslationFormProps> = ({
   title,
   placeholder,
@@ -71,17 +82,20 @@ const Translation = () => {
           <TranslationForm
             title="Tiếng Việt"
             bottomActions={
-              <Stack direction="row" spacing={0.5}>
-                <IconButton>
-                  <HistoryIcon />
-                </IconButton>
-                <IconButton>
-                  <Edit />
-                </IconButton>
-                <IconButton>
-                  <FolderOpen />
-                </IconButton>
-              </Stack>
+              <Box>
+                <Stack direction="row" spacing={0.5}>
+                  <IconButton>
+                    <HistoryIcon />
+                  </IconButton>
+                  <IconButton>
+                    <Edit />
+                  </IconButton>
+                  <IconButton>
+                    <FolderOpen />
+                  </IconButton>
+                </Stack>
+                {/* <SaveButton /> */}
+              </Box>
             }
           />
         </Grid>
