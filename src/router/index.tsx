@@ -4,6 +4,7 @@ import Login from "../pages/login";
 import Register from "../pages/register";
 import AuthLayout from "../layout/auth";
 import MainLayout from "../layout/main";
+import Protected from "@/pages/ProtectedPage";
 
 export const PAGES_PATH = {
   SIGN_IN: "/auth/login",
@@ -16,7 +17,7 @@ export const PAGES_PATH = {
 
 const router = createBrowserRouter([
   {
-    element: <MainLayout />,
+    element: <Protected component={<MainLayout />} />,
     children: [
       {
         path: PAGES_PATH.TRANS,

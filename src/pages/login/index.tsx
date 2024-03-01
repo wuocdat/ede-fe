@@ -14,9 +14,15 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AuthServices from "@/service/auth.services";
 import { toast } from "react-toastify";
+import TokenService from "@/service/token.services";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const defaultTheme = createTheme();
+
+  const navigate = useNavigate();
+
+  const token = TokenService.getToken();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -37,16 +43,24 @@ const Login = () => {
     }
 
     try {
-      await AuthServices.login({
+      const { data } = await AuthServices.login({
         username: username.toString(),
         password: password.toString(),
       });
-      toast.success("Đăng nhập thành công");
+      if (data) {
+        TokenService.saveToken(data.access_token);
+        toast.success("Đăng nhập thành công");
+        navigate("/");
+      }
     } catch (error) {
       console.log(error);
       toast.error("Đăng nhập không thành công");
     }
   };
+
+  if (token) {
+    return <Navigate to={"/"} />;
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>

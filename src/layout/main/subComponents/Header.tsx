@@ -10,6 +10,7 @@ import { COLORS } from "@/theme/colors";
 import * as React from "react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import TokenService from "@/service/token.services";
 
 const RootContainer = styled.div`
   display: flex;
@@ -22,6 +23,8 @@ const RootContainer = styled.div`
 const Header = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
+  const navigate = useNavigate();
+
   const open = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -32,9 +35,12 @@ const Header = () => {
     setAnchorEl(null);
   };
 
-  const [value, setValue] = useState(0);
+  const handleLogout = () => {
+    TokenService.removeToken();
+    navigate("/auth/login");
+  };
 
-  const navigate = useNavigate();
+  const [value, setValue] = useState(0);
 
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -93,7 +99,7 @@ const Header = () => {
             }}
           >
             <MenuItem onClick={handleClose}>Tài khoản</MenuItem>
-            <MenuItem onClick={handleClose}>Đăng xuất</MenuItem>
+            <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
           </Menu>
         </div>
       </Stack>
