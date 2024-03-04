@@ -25,7 +25,7 @@ api.interceptors.response.use(
   },
   async (err) => {
     const originalConfig = err.config;
-    if (originalConfig.url !== "auth/login" && err.response) {
+    if (originalConfig.url !== "/auth/login" && err.response) {
       if (err.response.status === 401) {
         TokenService.removeToken();
         window.location.replace("/auth/login");
