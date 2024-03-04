@@ -84,7 +84,7 @@ const Header = () => {
             aria-expanded={open ? "true" : undefined}
             onClick={handleClick}
           >
-            Nguyen Van A
+            {user?.username}
           </Button>
           <Menu
             id="basic-menu"
