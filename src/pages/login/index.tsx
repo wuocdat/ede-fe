@@ -16,13 +16,15 @@ import AuthServices from "@/service/auth.services";
 import { toast } from "react-toastify";
 import TokenService from "@/service/token.services";
 import { Navigate, useNavigate } from "react-router-dom";
+import useUserStore from "@/store/user";
 
 const Login = () => {
   const defaultTheme = createTheme();
 
   const navigate = useNavigate();
 
-  const token = TokenService.getToken();
+  const user = useUserStore((state) => state.user);
+  const updateUser = useUserStore((state) => state.setUser);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -49,6 +51,7 @@ const Login = () => {
       });
       if (data) {
         TokenService.saveToken(data.access_token);
+        updateUser(data.user);
         toast.success("Đăng nhập thành công");
         navigate("/");
       }
@@ -58,7 +61,7 @@ const Login = () => {
     }
   };
 
-  if (token) {
+  if (user) {
     return <Navigate to={"/"} />;
   }
 

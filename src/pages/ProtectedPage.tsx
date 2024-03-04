@@ -1,30 +1,36 @@
 import AuthServices from "@/service/auth.services";
 import TokenService from "@/service/token.services";
+import useUserStore from "@/store/user";
 import { FC, useEffect } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 interface ProtectedProps {
   component: JSX.Element;
 }
 
 const Protected: FC<ProtectedProps> = ({ component }) => {
-  const token = TokenService.getToken();
+  const user = useUserStore((state) => state.user);
+  const updateUser = useUserStore((state) => state.setUser);
 
-  const navigate = useNavigate();
+  const checkUser = async () => {
+    try {
+      const { data } = await AuthServices.checkUser();
 
-  const checkUser = () => {
-    AuthServices.checkUser().catch((err) => {
-      console.error(err);
+      if (data) {
+        updateUser(data);
+      }
+    } catch (error) {
+      console.error(error);
       TokenService.removeToken();
-      navigate("/auth/login");
-    });
+      updateUser(null);
+    }
   };
 
   useEffect(() => {
     checkUser();
   }, []);
 
-  if (token) {
+  if (user) {
     return component;
   } else {
     return <Navigate to="/auth/login" />;

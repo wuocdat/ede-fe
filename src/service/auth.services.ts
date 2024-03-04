@@ -1,10 +1,10 @@
-import { LoginDto } from "@/types/type.dto";
+import { LoginDto, LoginResDto, UserDto } from "@/types/type.dto";
 import api from "./api";
 import { API_PATH } from "./path";
 import TokenService from "./token.services";
 
 const login = (data: LoginDto) => {
-  return api.post(API_PATH.LOGIN, data);
+  return api.post<LoginResDto>(API_PATH.LOGIN, data);
 };
 
 const logout = () => {
@@ -12,7 +12,7 @@ const logout = () => {
 };
 
 const checkUser = () => {
-  return api.get(API_PATH.CHECK);
+  return api.get<UserDto>(API_PATH.CHECK);
 };
 
 const AuthServices = {

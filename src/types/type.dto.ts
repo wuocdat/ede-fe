@@ -1,3 +1,5 @@
+import { ERole } from "./enums";
+
 export type LoginDto = {
   username: string;
   password: string;
@@ -27,4 +29,15 @@ export type PreTransDto = {
 
 export type PreDataUploadResDto = {
   savedTransNum: number;
+};
+
+export type UserDto = {
+  id: number;
+  username: string;
+  role: ERole;
+};
+
+export type LoginResDto = {
+  access_token: string;
+  user: UserDto;
 };

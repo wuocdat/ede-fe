@@ -11,6 +11,8 @@ import * as React from "react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import TokenService from "@/service/token.services";
+import useUserStore from "@/store/user";
+import { ERole } from "@/types/enums";
 
 const RootContainer = styled.div`
   display: flex;
@@ -21,6 +23,8 @@ const RootContainer = styled.div`
 `;
 
 const Header = () => {
+  const user = useUserStore((state) => state.user);
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const navigate = useNavigate();
@@ -47,6 +51,10 @@ const Header = () => {
     navigate(HEAD_TABS[newValue].path, { replace: true });
   };
 
+  const tabs = HEAD_TABS.filter((tab) => {
+    return tab.role !== ERole.ADMIN || user?.role === ERole.ADMIN;
+  }).map((item, index) => <StyledTab key={index} label={item.title} />);
+
   return (
     <RootContainer>
       <Typography
@@ -58,9 +66,7 @@ const Header = () => {
       </Typography>
       <Box sx={{ flex: 1, margin: "auto" }}>
         <StyledTabs value={value} onChange={handleChange} aria-label="styled tabs example">
-          {HEAD_TABS.map((item, index) => (
-            <StyledTab key={index} label={item.title} />
-          ))}
+          {tabs}
         </StyledTabs>
       </Box>
       <Stack direction="row" alignItems="center" gap={3}>
