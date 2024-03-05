@@ -1,31 +1,19 @@
 import BorderBox from "@/components/share/BorderBox";
 import { COLORS } from "@/theme/colors";
-import {
-  Box,
-  Button,
-  Grid,
-  IconButton,
-  InputBase,
-  Stack,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Box, Button, Grid, InputBase, Typography, useTheme } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { FC, useEffect, useState } from "react";
-import HistoryIcon from "@mui/icons-material/History";
-import { Edit, FolderOpen, Save } from "@mui/icons-material";
+import { Save } from "@mui/icons-material";
 import { TranslationDto } from "@/types/type.dto";
 import TransService from "@/service/trans.services";
 import { toast } from "react-toastify";
 
 interface TranslationFormProps {
   title: string;
-  placeholder?: string;
-  inputMode?: boolean;
+  placeholder: string;
   bottomActions?: React.ReactNode;
-  text?: string;
-  inputValue?: string;
-  onChange?: (value: string) => void;
+  inputValue: string;
+  onChange: (value: string) => void;
 }
 
 // const SaveButton: FC<ButtonProps> = (props) => (
@@ -42,10 +30,8 @@ interface TranslationFormProps {
 const TranslationForm: FC<TranslationFormProps> = ({
   title,
   placeholder,
-  inputMode,
   bottomActions,
   inputValue,
-  text,
   onChange,
 }) => {
   const theme = useTheme();
@@ -67,18 +53,14 @@ const TranslationForm: FC<TranslationFormProps> = ({
         {title}
       </Typography>
       <Box p={theme.spacing(1)}>
-        {inputMode ? (
-          <InputBase
-            placeholder={placeholder}
-            rows={7}
-            multiline
-            sx={{ width: "100%", fontSize: theme.typography.pxToRem(18) }}
-            value={inputValue}
-            onChange={handleChange}
-          />
-        ) : (
-          <Typography fontSize={theme.typography.pxToRem(18)}>{text}</Typography>
-        )}
+        <InputBase
+          placeholder={placeholder}
+          rows={7}
+          multiline
+          sx={{ width: "100%", fontSize: theme.typography.pxToRem(18) }}
+          value={inputValue}
+          onChange={handleChange}
+        />
       </Box>
       <Box position="absolute" bottom={4} left={4} right={4}>
         {bottomActions}
@@ -114,10 +96,27 @@ const Translation = () => {
     });
   };
 
+  const handleEdeInputChange = (value: string) => {
+    setTrans((prev) => {
+      if (prev) {
+        return {
+          ...prev,
+          ede_text: value,
+        };
+      } else {
+        return prev;
+      }
+    });
+  };
+
   const handleSave = async () => {
-    if (trans && trans.vi_text) {
+    if (trans && trans.vi_text && trans.ede_text) {
       try {
-        await TransService.updateTransById(trans.id, { vi_text: trans.vi_text, correct: true });
+        await TransService.updateTransById(trans.id, {
+          vi_text: trans.vi_text,
+          correct_ede_text: trans.ede_text,
+          correct: true,
+        });
         toast.success("Đã cập nhật thành công", { autoClose: 1000 });
         fetchIncorrectTrans();
       } catch (error) {
@@ -136,31 +135,33 @@ const Translation = () => {
         <Grid container padding={3}>
           <Grid item xs={6}>
             <TranslationForm
+              placeholder="Nhập đoạn dịch bằng tiếng Êđê"
               title="Tiếng Ê-đê"
-              text={trans.ede_text}
+              inputValue={trans.ede_text || ""}
+              onChange={handleEdeInputChange}
               bottomActions={
-                <Box>
-                  <Stack direction="row" spacing={0.5}>
-                    <IconButton>
-                      <HistoryIcon />
-                    </IconButton>
-                    <IconButton>
-                      <Edit />
-                    </IconButton>
-                    <IconButton>
-                      <FolderOpen />
-                    </IconButton>
-                  </Stack>
-                  {/* <SaveButton /> */}
-                </Box>
+                // <Box>
+                //   <Stack direction="row" spacing={0.5}>
+                //     <IconButton>
+                //       <HistoryIcon />
+                //     </IconButton>
+                //     <IconButton>
+                //       <Edit />
+                //     </IconButton>
+                //     <IconButton>
+                //       <FolderOpen />
+                //     </IconButton>
+                //   </Stack>
+                //   {/* <SaveButton /> */}
+                // </Box>
+                <></>
               }
             />
           </Grid>
           <Grid item xs={6}>
             <TranslationForm
               title="Tiếng Việt"
-              placeholder="Nhập đoạn dịch bằng tiếng Êđê"
-              inputMode
+              placeholder="Nhập đoạn dịch bằng tiếng Việt"
               bottomActions={
                 <Button
                   variant="contained"

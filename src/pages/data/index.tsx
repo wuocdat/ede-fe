@@ -4,12 +4,9 @@ import VisuallyHiddenInput from "@/components/base/VisuallyHiddenInput";
 import { ChangeEvent, useRef, useState } from "react";
 import DataService from "@/service/data.services";
 import { toast } from "react-toastify";
-import PreImportingDialog from "./subComponents/PreImportingDialog";
-import { PreTransDto } from "@/types/type.dto";
 
 const DataPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [preData, setPreData] = useState<PreTransDto[] | null>(null);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -22,7 +19,10 @@ const DataPage = () => {
         formData.append("file", files[0]);
         const { data } = await DataService.uploadFile(formData);
 
-        if (data) setPreData(data);
+        if (data) {
+          toast.success(`Đã tải lên thành công ${data.savedTransNum} bản ghi.`);
+          if (inputRef && inputRef.current) inputRef.current.value = "";
+        }
       } catch (error) {
         console.log(error);
         toast.error("Tải file lên không thành công");
@@ -32,28 +32,30 @@ const DataPage = () => {
     }
   };
 
-  const handleUploadPreData = async () => {
-    if (preData) {
-      try {
-        setLoading(true);
-        const { data } = await DataService.uploadPreData(preData);
-        if (data) {
-          toast.success(
-            `Đã tải lên thành công ${data.savedTransNum} bản ghi, ${
-              preData.length - data.savedTransNum
-            } bản ghi lỗi hoặc bị trùng`
-          );
-          setPreData(null);
-          if (inputRef && inputRef.current) inputRef.current.value = "";
-        }
-      } catch (error) {
-        console.log(error);
-        toast.error("Đã xảy ra lỗi, tải lên không thành công");
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
+  // const handleUploadPreData = async () => {
+  //   if (preData) {
+  //     try {
+  //       setLoading(true);
+  //       const { data } = await DataService.uploadPreData(
+  //         preData.map((item) => ({ ...preData, correct: !!item.correct_ede_text }))
+  //       );
+  //       if (data) {
+  //         toast.success(
+  //           `Đã tải lên thành công ${data.savedTransNum} bản ghi, ${
+  //             preData.length - data.savedTransNum
+  //           } bản ghi lỗi hoặc bị trùng`
+  //         );
+  //         setPreData(null);
+  //         if (inputRef && inputRef.current) inputRef.current.value = "";
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //       toast.error("Đã xảy ra lỗi, tải lên không thành công");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
+  // };
 
   return (
     <>
@@ -77,12 +79,12 @@ const DataPage = () => {
           Thêm bản ghi
         </Button>
       </Stack>
-      <PreImportingDialog
+      {/* <PreImportingDialog
         preData={preData}
         onClose={() => setPreData(null)}
         setPreData={setPreData}
         onUpload={handleUploadPreData}
-      />
+      /> */}
     </>
   );
 };

@@ -9,6 +9,7 @@ export type TranslationDto = {
   id: number;
   ede_text: string;
   vi_text: string | null;
+  correct_ede_text: string | null;
   correct: boolean;
 };
 
@@ -17,14 +18,16 @@ export type IncorrectTransResDto = {
 };
 
 export type UpdateTransDto = {
-  ede_text?: string;
-  vi_text?: string;
-  correct?: boolean;
+  correct_ede_text: string;
+  vi_text: string;
+  correct: boolean;
 };
 
 export type PreTransDto = {
   ede_text?: string;
   vi_text?: string;
+  correct_ede_text?: string | null;
+  correct?: boolean;
 };
 
 export type PreDataUploadResDto = {

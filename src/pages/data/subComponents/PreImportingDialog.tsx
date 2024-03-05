@@ -54,6 +54,7 @@ export default function PreImportingDialog({
                 <TableRow>
                   <TableCell>Tiếng Ê-đê</TableCell>
                   <TableCell>Tiếng Việt</TableCell>
+                  <TableCell>Đã sửa</TableCell>
                   <TableCell>Bỏ</TableCell>
                 </TableRow>
               </TableHead>
@@ -66,6 +67,7 @@ export default function PreImportingDialog({
                     >
                       <TableCell>{row.ede_text}</TableCell>
                       <TableCell>{row.vi_text}</TableCell>
+                      <TableCell>{row.correct_ede_text}</TableCell>
                       <TableCell>
                         <IconButton
                           aria-label="delete"

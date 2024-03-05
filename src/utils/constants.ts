@@ -13,8 +13,8 @@ export const HEAD_TABS = [
     path: "/trans",
   },
   {
-    title: "Cộng đồng",
-    path: "/community",
+    title: "Quản Trị",
+    path: "/admin",
     role: ERole.ADMIN,
   },
 ];

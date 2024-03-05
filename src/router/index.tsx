@@ -7,13 +7,14 @@ import MainLayout from "../layout/main";
 import Protected from "@/pages/ProtectedPage";
 import DataPage from "@/pages/data";
 import ProtectedRouteAdmin from "@/pages/ProtectedRouteAdmin";
+import AdminPage from "@/pages/admin";
 
 export const PAGES_PATH = {
   SIGN_IN: "/auth/login",
   SIGN_UP: "/auth/register",
   DATA: "/data",
   TRANS: "/trans",
-  COMMUNITY: "/community",
+  ADMIN: "/admin",
   ALL: "*",
 };
 
@@ -30,8 +31,8 @@ const router = createBrowserRouter([
         element: <ProtectedRouteAdmin component={<DataPage />} />,
       },
       {
-        path: PAGES_PATH.COMMUNITY,
-        element: <ProtectedRouteAdmin component={<Translation />} />,
+        path: PAGES_PATH.ADMIN,
+        element: <ProtectedRouteAdmin component={<AdminPage />} />,
       },
       {
         path: PAGES_PATH.ALL,

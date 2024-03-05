@@ -3,7 +3,7 @@ import api from "./api";
 import { API_PATH } from "./path";
 
 const uploadFile = (data: FormData) => {
-  return api.post<PreTransDto[]>(API_PATH.UPLOAD, data);
+  return api.post<PreDataUploadResDto>(API_PATH.UPLOAD, data);
 };
 
 const uploadPreData = (preData: PreTransDto[]) => {
