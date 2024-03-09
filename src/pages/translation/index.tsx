@@ -7,6 +7,7 @@ import { Save } from "@mui/icons-material";
 import { TranslationDto } from "@/types/type.dto";
 import TransService from "@/service/trans.services";
 import { toast } from "react-toastify";
+import HistoryComponent from "./subComponents/HistoryComponent";
 
 interface TranslationFormProps {
   title: string;
@@ -130,9 +131,9 @@ const Translation = () => {
   }, []);
 
   return (
-    <Box bgcolor={COLORS.BACKGROUND} flex={1}>
+    <Box bgcolor={COLORS.BACKGROUND} flex={1} padding={3}>
       {trans ? (
-        <Grid container padding={3}>
+        <Grid container>
           <Grid item xs={6}>
             <TranslationForm
               placeholder="Nhập đoạn dịch bằng tiếng Êđê"
@@ -182,6 +183,7 @@ const Translation = () => {
           Không còn bản dịch nào
         </Typography>
       )}
+      <HistoryComponent />
     </Box>
   );
 };
