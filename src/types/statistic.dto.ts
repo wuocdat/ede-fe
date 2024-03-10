@@ -21,3 +21,7 @@ export type CorrectTransByEditorStatisticDto = {
   editors: EditorStatisticDto[];
   total: number;
 };
+
+export type YearlyStatisticChartDto = {
+  [x: string]: number | string;
+};

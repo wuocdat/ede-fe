@@ -5,6 +5,7 @@ import {
   CorrectTransByEditorStatisticDto,
   EditorStatisticDto,
   TransStatisticDto,
+  YearlyStatisticChartDto,
 } from "@/types/statistic.dto";
 
 const getIncorrectTrans = () => {
@@ -35,12 +36,19 @@ const getAllTimeEditorStatistic = async () => {
   return data;
 };
 
+const getYearlyStatisticChartData = async () => {
+  const { data } = await api.get<YearlyStatisticChartDto[]>(API_PATH.YEARLY_STATISTIC_DATA_CHART);
+
+  return data;
+};
+
 const TransService = {
   getIncorrectTrans,
   updateTransById,
   getTransStatistic,
   getMonthlyEditorStatistic: getCurrentMonthlyEditorStatistic,
   getAllTimeEditorStatistic,
+  getYearlyStatisticChartData,
 };
 
 export default TransService;

@@ -6,6 +6,8 @@ import { grey } from "@mui/material/colors";
 import { useQuery } from "@tanstack/react-query";
 import TransService from "@/service/trans.services";
 
+const valueFormatter = (value: number) => `${value} câu`;
+
 const AdminPage = () => {
   const { isPending: isTransStatisticLoading, data: transStatistic } = useQuery({
     queryKey: ["getTransStatistic"],
@@ -22,10 +24,22 @@ const AdminPage = () => {
     queryFn: TransService.getAllTimeEditorStatistic,
   });
 
+  const { isPending: isBarChartLoading, data: yearlyBarchartData } = useQuery({
+    queryKey: ["yearlyStatisticChartData"],
+    queryFn: TransService.getYearlyStatisticChartData,
+  });
+
+  const barChartSeries =
+    !!yearlyBarchartData && yearlyBarchartData.length > 0
+      ? Object.keys(yearlyBarchartData[0])
+          .filter((item) => item !== "month")
+          .map((item) => ({ dataKey: item, label: item.toUpperCase(), valueFormatter }))
+      : [];
+
   return (
     <Stack p={2} bgcolor={grey[100]}>
       <Typography variant="h5" fontWeight="500" textTransform="uppercase" mt={1}>
-        Thống kê toàn thời gian
+        Tổng quan
       </Typography>
       <Stack direction="row" spacing={2} mt={1}>
         <LabelBox isLoading={isTransStatisticLoading} title="Các thông số" maxWidth={500}>
@@ -80,12 +94,11 @@ const AdminPage = () => {
         Thống kê toàn thời gian
       </Typography>
       <Stack direction="row" alignItems="center" spacing={3} mt={1}>
-        <LabelBox title="Trong 5 tháng gần nhất" flex={1}>
+        <LabelBox isLoading={isBarChartLoading} title="Trong 5 tháng gần nhất" flex={1}>
           <BarChart
-            xAxis={[
-              { scaleType: "band", data: ["group A", "group B", "group C", "group D", "group E"] },
-            ]}
-            series={[{ data: [4, 3, 5] }, { data: [1, 6, 3] }, { data: [2, 5, 6] }]}
+            dataset={yearlyBarchartData || []}
+            xAxis={[{ scaleType: "band", dataKey: "month" }]}
+            series={barChartSeries}
             height={300}
           />
         </LabelBox>
