@@ -75,9 +75,9 @@ const DataPage = () => {
           Upload file
           <VisuallyHiddenInput ref={inputRef} type="file" accept=".xlsx" onChange={handleChange} />
         </Button>
-        <Button variant="contained" sx={{ alignSelf: "center" }}>
+        {/* <Button variant="contained" sx={{ alignSelf: "center" }}>
           Thêm bản ghi
-        </Button>
+        </Button> */}
       </Stack>
       {/* <PreImportingDialog
         preData={preData}

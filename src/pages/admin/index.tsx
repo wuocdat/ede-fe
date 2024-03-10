@@ -54,7 +54,7 @@ const AdminPage = () => {
         <LabelBox isLoading={isMonthlyEditorLoading} title="Thông số tháng này" maxWidth={600}>
           {!!monthlyEditorStatistic && (
             <Stack direction="row" gap={3} mt={1} flexWrap="wrap">
-              <InfoBox title="số câu được chẩn hóa" text={monthlyEditorStatistic.total + ""} />
+              <InfoBox title="số câu được chuẩn hóa" text={monthlyEditorStatistic.total + ""} />
               {monthlyEditorStatistic.editors.map((editor) => (
                 <InfoBox
                   key={editor.editor.id}
