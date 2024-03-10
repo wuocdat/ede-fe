@@ -14,4 +14,6 @@ export const API_PATH = {
   MONTHLY_EDITOR_STATISTIC: "/translation/monthly-correct-statistic",
   ALL_TIME_EDITOR_STATISTIC: "/translation/all-time-editor-statistic",
   YEARLY_STATISTIC_DATA_CHART: "/translation/yearly-correct-statistic",
+  RECENT_UPDATED_TRANS: "/translation/recent-updated-trans",
+  GET_ONE_BY_ID: "/translation",
 };

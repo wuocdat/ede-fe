@@ -1,4 +1,4 @@
-import { IncorrectTransResDto, UpdateTransDto } from "@/types/type.dto";
+import { IncorrectTransResDto, TranslationDto, UpdateTransDto } from "@/types/type.dto";
 import api from "./api";
 import { API_PATH } from "./path";
 import {
@@ -42,6 +42,18 @@ const getYearlyStatisticChartData = async () => {
   return data;
 };
 
+const getRecetUpdatedTrans = async () => {
+  const { data } = await api.get<TranslationDto[]>(API_PATH.RECENT_UPDATED_TRANS);
+
+  return data;
+};
+
+const getOneById = async (transId: number) => {
+  const { data } = await api.get<TranslationDto>(API_PATH.GET_ONE_BY_ID + `/${transId}`);
+
+  return data;
+};
+
 const TransService = {
   getIncorrectTrans,
   updateTransById,
@@ -49,6 +61,8 @@ const TransService = {
   getMonthlyEditorStatistic: getCurrentMonthlyEditorStatistic,
   getAllTimeEditorStatistic,
   getYearlyStatisticChartData,
+  getRecetUpdatedTrans,
+  getOneById,
 };
 
 export default TransService;

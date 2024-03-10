@@ -8,6 +8,7 @@ import { TranslationDto } from "@/types/type.dto";
 import TransService from "@/service/trans.services";
 import { toast } from "react-toastify";
 import HistoryComponent from "./subComponents/HistoryComponent";
+import { useQuery } from "@tanstack/react-query";
 
 interface TranslationFormProps {
   title: string;
@@ -73,6 +74,11 @@ const TranslationForm: FC<TranslationFormProps> = ({
 const Translation = () => {
   const [trans, setTrans] = useState<TranslationDto | null>(null);
 
+  const { data: historyData, refetch: historyRefetch } = useQuery({
+    queryKey: ["recentUpdatedTrans"],
+    queryFn: TransService.getRecetUpdatedTrans,
+  });
+
   const fetchIncorrectTrans = async () => {
     try {
       const { data } = await TransService.getIncorrectTrans();
@@ -119,10 +125,22 @@ const Translation = () => {
           correct: true,
         });
         toast.success("Đã cập nhật thành công", { autoClose: 1000 });
-        fetchIncorrectTrans();
+        await fetchIncorrectTrans();
+        historyRefetch();
       } catch (error) {
         console.log(error);
       }
+    }
+  };
+
+  const handleHistoryItemClick = async (transId: number) => {
+    try {
+      const data = await TransService.getOneById(transId);
+      if (data) {
+        setTrans(data);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -183,7 +201,7 @@ const Translation = () => {
           Không còn bản dịch nào
         </Typography>
       )}
-      <HistoryComponent />
+      <HistoryComponent data={historyData} onClick={handleHistoryItemClick} />
     </Box>
   );
 };
