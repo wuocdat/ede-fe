@@ -14,7 +14,6 @@ const OpenHistoryButton = ({ onClick }: { onClick: () => void }) => {
         display="flex"
         alignItems="center"
         ml={2}
-        my={1}
         onClick={onClick}
       >
         <History />

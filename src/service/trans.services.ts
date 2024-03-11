@@ -1,4 +1,9 @@
-import { IncorrectTransResDto, TranslationDto, UpdateTransDto } from "@/types/type.dto";
+import {
+  FindTransOptions,
+  IncorrectTransResDto,
+  TranslationDto,
+  UpdateTransDto,
+} from "@/types/type.dto";
 import api from "./api";
 import { API_PATH } from "./path";
 import {
@@ -54,6 +59,14 @@ const getOneById = async (transId: number) => {
   return data;
 };
 
+const getTransWithOptions = async (option: FindTransOptions) => {
+  const { data } = await api.get<[TranslationDto[], number]>(API_PATH.GET_TRANS_WITH_OPTIONS, {
+    params: option,
+  });
+
+  return data;
+};
+
 const TransService = {
   getIncorrectTrans,
   updateTransById,
@@ -63,6 +76,7 @@ const TransService = {
   getYearlyStatisticChartData,
   getRecetUpdatedTrans,
   getOneById,
+  getTransWithOptions,
 };
 
 export default TransService;

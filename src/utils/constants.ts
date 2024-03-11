@@ -18,3 +18,5 @@ export const HEAD_TABS = [
     role: ERole.ADMIN,
   },
 ];
+
+export const DATE_FORMATTER = "YYYY-MM-DD";

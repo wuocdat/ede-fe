@@ -11,6 +11,7 @@ export type TranslationDto = {
   vi_text: string | null;
   correct_ede_text: string | null;
   correct: boolean;
+  updatedAt: string;
 };
 
 export type IncorrectTransResDto = {
@@ -43,4 +44,10 @@ export type UserDto = {
 export type LoginResDto = {
   access_token: string;
   user: UserDto;
+};
+
+export type FindTransOptions = {
+  start: string;
+  end: string;
+  text?: string;
 };

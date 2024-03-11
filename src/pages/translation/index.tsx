@@ -2,13 +2,16 @@ import BorderBox from "@/components/share/BorderBox";
 import { COLORS } from "@/theme/colors";
 import { Box, Button, Grid, InputBase, Typography, useTheme } from "@mui/material";
 import { grey } from "@mui/material/colors";
-import { FC, useEffect, useState } from "react";
+import { FC, createContext, useEffect, useState } from "react";
 import { Save } from "@mui/icons-material";
 import { TranslationDto } from "@/types/type.dto";
 import TransService from "@/service/trans.services";
 import { toast } from "react-toastify";
 import HistoryComponent from "./subComponents/HistoryComponent";
 import { useQuery } from "@tanstack/react-query";
+import dayjs, { Dayjs } from "dayjs";
+import { DATE_FORMATTER } from "@/utils/constants";
+import { useDebounce } from "@/hooks/useDebounce";
 
 interface TranslationFormProps {
   title: string;
@@ -71,12 +74,53 @@ const TranslationForm: FC<TranslationFormProps> = ({
   );
 };
 
+type TransContextType = {
+  historyData?: [TranslationDto[], number];
+  startValue: Dayjs | null;
+  endValue: Dayjs | null;
+  textValue: string;
+  onClickHistoryItem: (transId: number) => void;
+  refetchHistory: () => void;
+  setStartValue: (value: Dayjs | null) => void;
+  setEndValue: (value: Dayjs | null) => void;
+  setTextValue: (value: string) => void;
+};
+
+export const TranslationContext = createContext<TransContextType>({
+  startValue: null,
+  endValue: null,
+  textValue: "",
+  onClickHistoryItem: () => {},
+  refetchHistory: () => {},
+  setStartValue: () => {},
+  setEndValue: () => {},
+  setTextValue: () => {},
+});
+
 const Translation = () => {
   const [trans, setTrans] = useState<TranslationDto | null>(null);
+  const [startValue, setStartValue] = useState<Dayjs | null>(dayjs().subtract(10, "days"));
+  const [endValue, setEndValue] = useState<Dayjs | null>(dayjs());
+  const [textValue, setTextValue] = useState("");
 
-  const { data: historyData, refetch: historyRefetch } = useQuery({
+  const debounce = useDebounce(textValue, 500);
+
+  const { data: recentData, refetch: recentHistoryRefetch } = useQuery({
     queryKey: ["recentUpdatedTrans"],
     queryFn: TransService.getRecetUpdatedTrans,
+  });
+
+  const fetchTransHistory = async () => {
+    return await TransService.getTransWithOptions({
+      start: startValue?.format(DATE_FORMATTER) || dayjs().format(DATE_FORMATTER),
+      end: endValue?.format(DATE_FORMATTER) || dayjs().format(DATE_FORMATTER),
+      text: textValue ? textValue : undefined,
+    });
+  };
+
+  const { data: historyData, refetch: historyRefetch } = useQuery({
+    queryKey: ["getTransWithOptions", startValue, endValue, debounce],
+    queryFn: fetchTransHistory,
   });
 
   const fetchIncorrectTrans = async () => {
@@ -84,6 +128,7 @@ const Translation = () => {
       const { data } = await TransService.getIncorrectTrans();
       if (data && data.trans) {
         setTrans(data.trans);
+        historyRefetch();
       }
     } catch (error) {
       console.log(error);
@@ -126,7 +171,7 @@ const Translation = () => {
         });
         toast.success("Đã cập nhật thành công", { autoClose: 1000 });
         await fetchIncorrectTrans();
-        historyRefetch();
+        recentHistoryRefetch();
       } catch (error) {
         console.log(error);
       }
@@ -138,6 +183,7 @@ const Translation = () => {
       const data = await TransService.getOneById(transId);
       if (data) {
         setTrans(data);
+        historyRefetch();
       }
     } catch (error) {
       console.log(error);
@@ -149,60 +195,74 @@ const Translation = () => {
   }, []);
 
   return (
-    <Box bgcolor={COLORS.BACKGROUND} flex={1} padding={3}>
-      {trans ? (
-        <Grid container>
-          <Grid item xs={6}>
-            <TranslationForm
-              placeholder="Nhập đoạn dịch bằng tiếng Êđê"
-              title="Tiếng Ê-đê"
-              inputValue={trans.ede_text || ""}
-              onChange={handleEdeInputChange}
-              bottomActions={
-                // <Box>
-                //   <Stack direction="row" spacing={0.5}>
-                //     <IconButton>
-                //       <HistoryIcon />
-                //     </IconButton>
-                //     <IconButton>
-                //       <Edit />
-                //     </IconButton>
-                //     <IconButton>
-                //       <FolderOpen />
-                //     </IconButton>
-                //   </Stack>
-                //   {/* <SaveButton /> */}
-                // </Box>
-                <></>
-              }
-            />
+    <TranslationContext.Provider
+      value={{
+        historyData,
+        startValue,
+        endValue,
+        textValue,
+        onClickHistoryItem: handleHistoryItemClick,
+        refetchHistory: historyRefetch,
+        setStartValue,
+        setEndValue,
+        setTextValue,
+      }}
+    >
+      <Box bgcolor={COLORS.BACKGROUND} flex={1} padding={3}>
+        {trans ? (
+          <Grid container>
+            <Grid item xs={6}>
+              <TranslationForm
+                placeholder="Nhập đoạn dịch bằng tiếng Êđê"
+                title="Tiếng Ê-đê"
+                inputValue={trans.ede_text || ""}
+                onChange={handleEdeInputChange}
+                bottomActions={
+                  // <Box>
+                  //   <Stack direction="row" spacing={0.5}>
+                  //     <IconButton>
+                  //       <HistoryIcon />
+                  //     </IconButton>
+                  //     <IconButton>
+                  //       <Edit />
+                  //     </IconButton>
+                  //     <IconButton>
+                  //       <FolderOpen />
+                  //     </IconButton>
+                  //   </Stack>
+                  //   {/* <SaveButton /> */}
+                  // </Box>
+                  <></>
+                }
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TranslationForm
+                title="Tiếng Việt"
+                placeholder="Nhập đoạn dịch bằng tiếng Việt"
+                bottomActions={
+                  <Button
+                    variant="contained"
+                    startIcon={<Save />}
+                    sx={{ float: "right", mr: "20px", mb: "8px" }}
+                    onClick={handleSave}
+                  >
+                    Lưu
+                  </Button>
+                }
+                inputValue={trans.vi_text || ""}
+                onChange={handleViInputChange}
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={6}>
-            <TranslationForm
-              title="Tiếng Việt"
-              placeholder="Nhập đoạn dịch bằng tiếng Việt"
-              bottomActions={
-                <Button
-                  variant="contained"
-                  startIcon={<Save />}
-                  sx={{ float: "right", mr: "20px", mb: "8px" }}
-                  onClick={handleSave}
-                >
-                  Lưu
-                </Button>
-              }
-              inputValue={trans.vi_text || ""}
-              onChange={handleViInputChange}
-            />
-          </Grid>
-        </Grid>
-      ) : (
-        <Typography bgcolor="yellow" textAlign="center" mt={2} fontStyle="italic">
-          Không còn bản dịch nào
-        </Typography>
-      )}
-      <HistoryComponent data={historyData} onClick={handleHistoryItemClick} />
-    </Box>
+        ) : (
+          <Typography bgcolor="yellow" textAlign="center" mt={2} fontStyle="italic">
+            Không còn bản dịch nào
+          </Typography>
+        )}
+        <HistoryComponent data={recentData} onClick={handleHistoryItemClick} />
+      </Box>
+    </TranslationContext.Provider>
   );
 };
 

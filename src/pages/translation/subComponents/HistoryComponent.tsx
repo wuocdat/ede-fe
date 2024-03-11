@@ -4,7 +4,8 @@ import { grey } from "@mui/material/colors";
 import TransHistoryBox from "./TransHistoryBox";
 import OpenHistoryButton from "./OpenHistoryButton";
 import { TranslationDto } from "@/types/type.dto";
-import { FC } from "react";
+import { FC, useState } from "react";
+import HistoryFinderDialog from "./HistoryFinderDialog";
 
 interface HistoryComponentProps {
   data?: TranslationDto[];
@@ -12,6 +13,16 @@ interface HistoryComponentProps {
 }
 
 const HistoryComponent: FC<HistoryComponentProps> = ({ data, onClick }) => {
+  const [openHistoryFinder, setOpenHistoryFinder] = useState<boolean>(false);
+
+  const handleOpenFinder = () => {
+    setOpenHistoryFinder(true);
+  };
+
+  const handleCloseFinder = () => {
+    setOpenHistoryFinder(false);
+  };
+
   return (
     <Stack mt={5} spacing={1}>
       <Stack
@@ -25,11 +36,12 @@ const HistoryComponent: FC<HistoryComponentProps> = ({ data, onClick }) => {
             cursor: "pointer",
           },
         }}
+        onClick={handleOpenFinder}
       >
         <Typography variant="h6">Xem Lịch sử</Typography>
         <East />
       </Stack>
-      <Stack direction="row" alignItems="center" spacing={2}>
+      <Stack direction="row" alignItems="center" gap={2} flexWrap="wrap">
         {data &&
           data.map((trans) => (
             <TransHistoryBox
@@ -39,8 +51,9 @@ const HistoryComponent: FC<HistoryComponentProps> = ({ data, onClick }) => {
               onClick={() => onClick(trans.id)}
             />
           ))}
-        <OpenHistoryButton onClick={() => {}} />
+        <OpenHistoryButton onClick={handleOpenFinder} />
       </Stack>
+      <HistoryFinderDialog open={openHistoryFinder} onClose={handleCloseFinder} />
     </Stack>
   );
 };

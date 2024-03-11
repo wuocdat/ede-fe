@@ -16,4 +16,5 @@ export const API_PATH = {
   YEARLY_STATISTIC_DATA_CHART: "/translation/yearly-correct-statistic",
   RECENT_UPDATED_TRANS: "/translation/recent-updated-trans",
   GET_ONE_BY_ID: "/translation",
+  GET_TRANS_WITH_OPTIONS: "/translation/get-trans-with-options",
 };
