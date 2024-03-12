@@ -8,6 +8,7 @@ import Protected from "@/pages/ProtectedPage";
 import DataPage from "@/pages/data";
 import ProtectedRouteAdmin from "@/pages/ProtectedRouteAdmin";
 import AdminPage from "@/pages/admin";
+import ProtectedRouteEditor from "@/pages/ProtectedRouteEditor";
 
 export const PAGES_PATH = {
   SIGN_IN: "/auth/login",
@@ -24,7 +25,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: PAGES_PATH.TRANS,
-        element: <Translation />,
+        element: <ProtectedRouteEditor component={<Translation />} />,
       },
       {
         path: PAGES_PATH.DATA,
