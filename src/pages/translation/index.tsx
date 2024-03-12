@@ -12,6 +12,8 @@ import { useQuery } from "@tanstack/react-query";
 import dayjs, { Dayjs } from "dayjs";
 import { DATE_FORMATTER } from "@/utils/constants";
 import { useDebounce } from "@/hooks/useDebounce";
+import LoadingOverlay from "@/components/share/LoadingOverLay";
+import { PageDto } from "@/types/page.dto";
 
 interface TranslationFormProps {
   title: string;
@@ -75,26 +77,30 @@ const TranslationForm: FC<TranslationFormProps> = ({
 };
 
 type TransContextType = {
-  historyData?: [TranslationDto[], number];
+  historyData?: PageDto<TranslationDto>;
   startValue: Dayjs | null;
   endValue: Dayjs | null;
   textValue: string;
+  page: number;
   onClickHistoryItem: (transId: number) => void;
   refetchHistory: () => void;
   setStartValue: (value: Dayjs | null) => void;
   setEndValue: (value: Dayjs | null) => void;
   setTextValue: (value: string) => void;
+  setPage: (page: number) => void;
 };
 
 export const TranslationContext = createContext<TransContextType>({
   startValue: null,
   endValue: null,
   textValue: "",
+  page: 1,
   onClickHistoryItem: () => {},
   refetchHistory: () => {},
   setStartValue: () => {},
   setEndValue: () => {},
   setTextValue: () => {},
+  setPage: () => {},
 });
 
 const Translation = () => {
@@ -102,6 +108,8 @@ const Translation = () => {
   const [startValue, setStartValue] = useState<Dayjs | null>(dayjs().subtract(10, "days"));
   const [endValue, setEndValue] = useState<Dayjs | null>(dayjs());
   const [textValue, setTextValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState(1);
 
   const debounce = useDebounce(textValue, 500);
 
@@ -111,19 +119,26 @@ const Translation = () => {
   });
 
   const fetchTransHistory = async () => {
-    return await TransService.getTransWithOptions({
-      start: startValue?.format(DATE_FORMATTER) || dayjs().format(DATE_FORMATTER),
-      end: endValue?.format(DATE_FORMATTER) || dayjs().format(DATE_FORMATTER),
-      text: textValue ? textValue : undefined,
-    });
+    return await TransService.getTransWithOptions(
+      {
+        start: startValue?.format(DATE_FORMATTER) || dayjs().format(DATE_FORMATTER),
+        end: endValue?.format(DATE_FORMATTER) || dayjs().format(DATE_FORMATTER),
+        text: textValue ? textValue : undefined,
+      },
+      {
+        page,
+        take: 10,
+      }
+    );
   };
 
   const { data: historyData, refetch: historyRefetch } = useQuery({
-    queryKey: ["getTransWithOptions", startValue, endValue, debounce],
+    queryKey: ["getTransWithOptions", startValue, endValue, debounce, page],
     queryFn: fetchTransHistory,
   });
 
   const fetchIncorrectTrans = async () => {
+    setIsLoading(true);
     try {
       const { data } = await TransService.getIncorrectTrans();
       if (data && data.trans) {
@@ -132,6 +147,8 @@ const Translation = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -162,6 +179,7 @@ const Translation = () => {
   };
 
   const handleSave = async () => {
+    setIsLoading(true);
     if (trans && trans.vi_text && trans.ede_text) {
       try {
         await TransService.updateTransById(trans.id, {
@@ -174,11 +192,14 @@ const Translation = () => {
         recentHistoryRefetch();
       } catch (error) {
         console.log(error);
+      } finally {
+        setIsLoading(false);
       }
     }
   };
 
   const handleHistoryItemClick = async (transId: number) => {
+    setIsLoading(true);
     try {
       const data = await TransService.getOneById(transId);
       if (data) {
@@ -187,12 +208,18 @@ const Translation = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     fetchIncorrectTrans();
   }, []);
+
+  useEffect(() => {
+    setPage(1);
+  }, [startValue, endValue, debounce]);
 
   return (
     <TranslationContext.Provider
@@ -201,16 +228,19 @@ const Translation = () => {
         startValue,
         endValue,
         textValue,
+        page,
         onClickHistoryItem: handleHistoryItemClick,
         refetchHistory: historyRefetch,
         setStartValue,
         setEndValue,
         setTextValue,
+        setPage,
       }}
     >
-      <Box bgcolor={COLORS.BACKGROUND} flex={1} padding={3}>
+      <Box bgcolor={COLORS.BACKGROUND} flex={1} padding={3} position="relative">
         {trans ? (
-          <Grid container>
+          <Grid container position="relative">
+            {isLoading && <LoadingOverlay />}
             <Grid item xs={6}>
               <TranslationForm
                 placeholder="Nhập đoạn dịch bằng tiếng Êđê"
@@ -256,9 +286,7 @@ const Translation = () => {
             </Grid>
           </Grid>
         ) : (
-          <Typography bgcolor="yellow" textAlign="center" mt={2} fontStyle="italic">
-            Không còn bản dịch nào
-          </Typography>
+          <LoadingOverlay />
         )}
         <HistoryComponent data={recentData} onClick={handleHistoryItemClick} />
       </Box>

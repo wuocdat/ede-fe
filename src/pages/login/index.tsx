@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import TokenService from "@/service/token.services";
 import { Navigate, useNavigate } from "react-router-dom";
 import useUserStore from "@/store/user";
+import LoadingOverlay from "@/components/share/LoadingOverLay";
 
 const Login = () => {
   const defaultTheme = createTheme();
@@ -25,6 +26,8 @@ const Login = () => {
 
   const user = useUserStore((state) => state.user);
   const updateUser = useUserStore((state) => state.setUser);
+
+  const [loading, setLoading] = React.useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -44,6 +47,8 @@ const Login = () => {
       return;
     }
 
+    setLoading(true);
+
     try {
       const { data } = await AuthServices.login({
         username: username.toString(),
@@ -58,6 +63,8 @@ const Login = () => {
     } catch (error) {
       console.log(error);
       toast.error("Đăng nhập không thành công");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -77,6 +84,7 @@ const Login = () => {
             alignItems: "center",
           }}
         >
+          {loading && <LoadingOverlay />}
           <Avatar style={{ backgroundColor: "black" }}>
             <LockOutlinedIcon />
           </Avatar>

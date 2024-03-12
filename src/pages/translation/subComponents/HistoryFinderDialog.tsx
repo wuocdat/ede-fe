@@ -1,6 +1,6 @@
 import { COLORS } from "@/theme/colors";
 import { ArrowBack } from "@mui/icons-material";
-import { Box, Divider, IconButton, Stack, TextField, Typography } from "@mui/material";
+import { Box, Divider, IconButton, Pagination, Stack, TextField, Typography } from "@mui/material";
 import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import Dialog from "@mui/material/Dialog";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -61,11 +61,17 @@ export default function HistoryFinderDialog({ ...props }: HistoryFinderDialogPro
     endValue,
     textValue,
     historyData: data,
+    page,
     onClickHistoryItem,
     setEndValue,
     setStartValue,
     setTextValue,
+    setPage,
   } = useContext(TranslationContext);
+
+  const handleChange = (_: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+  };
 
   return (
     <Dialog
@@ -97,7 +103,7 @@ export default function HistoryFinderDialog({ ...props }: HistoryFinderDialogPro
             {/* <IconButton color="inherit">
               <Search fontSize="large" />
             </IconButton> */}
-            <Typography>{data?.[1]} kết quả</Typography>
+            <Typography>{data?.meta.itemCount} kết quả</Typography>
           </Box>
         </Stack>
 
@@ -119,9 +125,18 @@ export default function HistoryFinderDialog({ ...props }: HistoryFinderDialogPro
           />
         </Stack>
         <Stack p={2}>
+          <Pagination
+            count={data?.meta.pageCount || 0}
+            page={page}
+            onChange={handleChange}
+            variant="outlined"
+            shape="rounded"
+            sx={{ mb: 2 }}
+          />
           {data &&
-            data[0] &&
-            data[0].map((item) => (
+            data.data &&
+            data.data.length > 0 &&
+            data.data.map((item) => (
               <TransHistoryItem
                 key={item.id}
                 text={item.correct_ede_text || item.ede_text}

@@ -11,7 +11,6 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import TokenService from "@/service/token.services";
 import useUserStore from "@/store/user";
-import { ERole } from "@/types/enums";
 
 const RootContainer = styled.div`
   display: flex;
@@ -23,6 +22,7 @@ const RootContainer = styled.div`
 
 const Header = () => {
   const user = useUserStore((state) => state.user);
+  const updateUser = useUserStore((state) => state.setUser);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -40,6 +40,7 @@ const Header = () => {
 
   const handleLogout = () => {
     TokenService.removeToken();
+    updateUser(null);
     navigate("/auth/login");
   };
 
@@ -51,7 +52,7 @@ const Header = () => {
   };
 
   const tabs = HEAD_TABS.filter((tab) => {
-    return tab.role !== ERole.ADMIN || user?.role === ERole.ADMIN;
+    return tab.role === user?.role;
   }).map((item, index) => <StyledTab key={index} label={item.title} />);
 
   return (

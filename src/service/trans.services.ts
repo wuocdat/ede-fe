@@ -12,6 +12,7 @@ import {
   TransStatisticDto,
   YearlyStatisticChartDto,
 } from "@/types/statistic.dto";
+import { PageDto, PageOptionsDto } from "@/types/page.dto";
 
 const getIncorrectTrans = () => {
   return api.get<IncorrectTransResDto>(API_PATH.INCORRECT_TRANS);
@@ -59,9 +60,12 @@ const getOneById = async (transId: number) => {
   return data;
 };
 
-const getTransWithOptions = async (option: FindTransOptions) => {
-  const { data } = await api.get<[TranslationDto[], number]>(API_PATH.GET_TRANS_WITH_OPTIONS, {
-    params: option,
+const getTransWithOptions = async (option: FindTransOptions, pageOptionDto: PageOptionsDto) => {
+  const { data } = await api.get<PageDto<TranslationDto>>(API_PATH.GET_TRANS_WITH_OPTIONS, {
+    params: {
+      ...option,
+      ...pageOptionDto,
+    },
   });
 
   return data;

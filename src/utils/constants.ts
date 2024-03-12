@@ -11,6 +11,7 @@ export const HEAD_TABS = [
   {
     title: "Dịch",
     path: "/trans",
+    role: ERole.EDITOR,
   },
   {
     title: "Quản Trị",
