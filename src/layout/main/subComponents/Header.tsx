@@ -30,6 +30,10 @@ const Header = () => {
 
   const open = Boolean(anchorEl);
 
+  const tabs = HEAD_TABS.filter((tab) => {
+    return tab.role === user?.role;
+  });
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -48,12 +52,8 @@ const Header = () => {
 
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
-    navigate(HEAD_TABS[newValue].path, { replace: true });
+    navigate(tabs[newValue].path, { replace: true });
   };
-
-  const tabs = HEAD_TABS.filter((tab) => {
-    return tab.role === user?.role;
-  }).map((item, index) => <StyledTab key={index} label={item.title} />);
 
   return (
     <RootContainer>
@@ -66,7 +66,9 @@ const Header = () => {
       </Typography>
       <Box sx={{ flex: 1, margin: "auto" }}>
         <StyledTabs value={value} onChange={handleChange} aria-label="styled tabs example">
-          {tabs}
+          {tabs.map((item, index) => (
+            <StyledTab key={index} label={item.title} />
+          ))}
         </StyledTabs>
       </Box>
       <Stack direction="row" alignItems="center" gap={3}>
