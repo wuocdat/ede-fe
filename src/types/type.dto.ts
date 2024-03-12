@@ -35,6 +35,11 @@ export type PreDataUploadResDto = {
   savedTransNum: number;
 };
 
+export type UploadMultipleFilesResDto = {
+  savedTransNum: number;
+  filesNameList: string[];
+};
+
 export type UserDto = {
   id: number;
   username: string;
