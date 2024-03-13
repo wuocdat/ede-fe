@@ -1,7 +1,7 @@
 import { Box, BoxProps, CircularProgress } from "@mui/material";
 import { FC } from "react";
 
-const LoadingOverlay: FC<BoxProps> = (props) => {
+const LoadingOverlay: FC<BoxProps> = ({ children, ...props }) => {
   return (
     <Box
       display="flex"
@@ -13,7 +13,7 @@ const LoadingOverlay: FC<BoxProps> = (props) => {
       sx={{ inset: 0, zIndex: 999 }}
       {...props}
     >
-      <CircularProgress />
+      {children ? children : <CircularProgress />}
     </Box>
   );
 };

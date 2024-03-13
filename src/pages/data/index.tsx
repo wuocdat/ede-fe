@@ -1,88 +1,69 @@
-import { Box, Button, CircularProgress, Stack, Typography } from "@mui/material";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { Box, Stack, Typography } from "@mui/material";
 import VisuallyHiddenInput from "@/components/base/VisuallyHiddenInput";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, DragEvent, useRef, useState } from "react";
 import DataService from "@/service/data.services";
 import { toast } from "react-toastify";
+import { grey } from "@mui/material/colors";
+import LoadingOverlay from "@/components/share/LoadingOverLay";
+import UploadExcelIcon from "@/components/svg/UploadExcelIcon";
 
 const DataPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [dragActive, setDragActive] = useState(false);
 
-  const inputRef = useRef<HTMLInputElement | null>(null);
   const inputMultipleRef = useRef<HTMLInputElement | null>(null);
 
-  const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      try {
-        setLoading(true);
-        const formData = new FormData();
-        formData.append("file", files[0]);
-        const { data } = await DataService.uploadFile(formData);
-
-        if (data) {
-          toast.success(`Đã tải lên thành công ${data.savedTransNum} bản ghi.`);
-          if (inputRef && inputRef.current) inputRef.current.value = "";
-        }
-      } catch (error) {
-        console.log(error);
-        toast.error("Tải file lên không thành công");
-      } finally {
-        setLoading(false);
-      }
+  const handleDrag = function (e: DragEvent<HTMLElement>) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
     }
+  };
+
+  const handleDrop = function (e: DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFiles(e.dataTransfer.files);
+    }
+  };
+
+  const onButtonClick = () => {
+    inputMultipleRef.current?.click();
   };
 
   const handleMultipleFilesChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
     const files = e.target.files;
     if (files && files.length > 0) {
-      try {
-        setLoading(true);
-        const formData = new FormData();
-        [...files].forEach((file) => formData.append("files", file));
-        const { data } = await DataService.uploadMultipleFiles(formData);
-
-        if (data) {
-          toast.success(
-            `Đã tải lên thành công ${data.savedTransNum} bản ghi từ: ${data.filesNameList.join(
-              ", "
-            )}`
-          );
-          if (inputMultipleRef && inputMultipleRef.current) inputMultipleRef.current.value = "";
-        }
-      } catch (error) {
-        console.log(error);
-        toast.error("Tải file lên không thành công");
-      } finally {
-        setLoading(false);
-      }
+      handleFiles(files);
     }
   };
 
-  // const handleUploadPreData = async () => {
-  //   if (preData) {
-  //     try {
-  //       setLoading(true);
-  //       const { data } = await DataService.uploadPreData(
-  //         preData.map((item) => ({ ...preData, correct: !!item.correct_ede_text }))
-  //       );
-  //       if (data) {
-  //         toast.success(
-  //           `Đã tải lên thành công ${data.savedTransNum} bản ghi, ${
-  //             preData.length - data.savedTransNum
-  //           } bản ghi lỗi hoặc bị trùng`
-  //         );
-  //         setPreData(null);
-  //         if (inputRef && inputRef.current) inputRef.current.value = "";
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //       toast.error("Đã xảy ra lỗi, tải lên không thành công");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   }
-  // };
+  const handleFiles = async (files: FileList) => {
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      [...files].forEach((file) => formData.append("files", file));
+      const { data } = await DataService.uploadMultipleFiles(formData);
+
+      if (data) {
+        toast.success(
+          `Đã tải lên thành công ${data.savedTransNum} bản ghi từ: ${data.filesNameList.join(", ")}`
+        );
+        if (inputMultipleRef && inputMultipleRef.current) inputMultipleRef.current.value = "";
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Tải file lên không thành công");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -90,78 +71,46 @@ const DataPage = () => {
         <Typography textAlign="center" textTransform="uppercase" variant="h5">
           Thêm bản ghi
         </Typography>
-        <Box position="relative" sx={{ alignSelf: "center" }}>
-          <Button
-            component="label"
-            role={undefined}
-            variant="contained"
-            tabIndex={-1}
-            startIcon={<CloudUploadIcon />}
-            disabled={loading}
-          >
-            Upload file
-            <VisuallyHiddenInput
-              ref={inputRef}
-              type="file"
-              accept=".xlsx"
-              onChange={handleChange}
-            />
-          </Button>
-          {loading && (
-            <CircularProgress
-              size={24}
-              sx={{
-                color: "darkgrey",
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                marginTop: "-12px",
-                marginLeft: "-12px",
-              }}
-            />
+        <Box
+          width={400}
+          height={220}
+          bgcolor={grey[50]}
+          alignSelf="center"
+          display="flex"
+          flexDirection="column"
+          position="relative"
+          justifyContent="center"
+          alignItems="center"
+          borderRadius={2}
+          border="1px dashed grey"
+          onDragEnter={handleDrag}
+          onDragLeave={handleDrag}
+          onDragOver={handleDrag}
+          onDrop={handleDrop}
+          onClick={onButtonClick}
+        >
+          <VisuallyHiddenInput
+            ref={inputMultipleRef}
+            type="file"
+            accept=".xlsx"
+            multiple
+            onChange={handleMultipleFilesChange}
+          />
+          {/* <img src="/images/uploadImg.svg" /> */}
+          <UploadExcelIcon />
+          <Typography variant="h6" mt={2}>
+            Kéo và thả hoặc click để tải lên
+          </Typography>
+          <Typography variant="caption" color="grey">
+            Định dạng file: .xlsx
+          </Typography>
+          {(dragActive || loading) && (
+            <LoadingOverlay>
+              {dragActive && <img src="/images/uploadCloudAnimated.gif" width={100} />}
+            </LoadingOverlay>
           )}
         </Box>
-        <Box position="relative" sx={{ alignSelf: "center" }}>
-          <Button
-            component="label"
-            variant="contained"
-            tabIndex={-1}
-            startIcon={<CloudUploadIcon />}
-            disabled={loading}
-          >
-            Upload Multiple Files
-            <VisuallyHiddenInput
-              ref={inputMultipleRef}
-              type="file"
-              accept=".xlsx"
-              multiple
-              onChange={handleMultipleFilesChange}
-            />
-          </Button>
-          {loading && (
-            <CircularProgress
-              size={24}
-              sx={{
-                color: "darkgrey",
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                marginTop: "-12px",
-                marginLeft: "-12px",
-              }}
-            />
-          )}
-        </Box>
-        {/* <Button variant="contained" sx={{ alignSelf: "center" }}>
-          Thêm bản ghi
-        </Button> */}
       </Stack>
-      {/* <PreImportingDialog
-        preData={preData}
-        onClose={() => setPreData(null)}
-        setPreData={setPreData}
-        onUpload={handleUploadPreData}
-      /> */}
     </>
   );
 };
