@@ -142,7 +142,10 @@ const Translation = () => {
     try {
       const { data } = await TransService.getIncorrectTrans();
       if (data && data.trans) {
-        setTrans(data.trans);
+        setTrans({
+          ...data.trans,
+          correct_ede_text: data.trans.correct_ede_text || data.trans.ede_text,
+        });
         historyRefetch();
       }
     } catch (error) {
@@ -170,7 +173,7 @@ const Translation = () => {
       if (prev) {
         return {
           ...prev,
-          ede_text: value,
+          correct_ede_text: value,
         };
       } else {
         return prev;
@@ -180,11 +183,11 @@ const Translation = () => {
 
   const handleSave = async () => {
     setIsLoading(true);
-    if (trans && trans.vi_text && trans.ede_text) {
+    if (trans && trans.vi_text && trans.correct_ede_text) {
       try {
         await TransService.updateTransById(trans.id, {
           vi_text: trans.vi_text,
-          correct_ede_text: trans.ede_text,
+          correct_ede_text: trans.correct_ede_text,
           correct: true,
         });
         toast.success("Đã cập nhật thành công", { autoClose: 1000 });
@@ -203,7 +206,7 @@ const Translation = () => {
     try {
       const data = await TransService.getOneById(transId);
       if (data) {
-        setTrans(data);
+        setTrans({ ...data, correct_ede_text: data.correct_ede_text || data.ede_text });
         historyRefetch();
       }
     } catch (error) {
@@ -245,7 +248,7 @@ const Translation = () => {
               <TranslationForm
                 placeholder="Nhập đoạn dịch bằng tiếng Êđê"
                 title="Tiếng Ê-đê"
-                inputValue={trans.correct_ede_text || trans.ede_text || ""}
+                inputValue={trans.correct_ede_text || ""}
                 onChange={handleEdeInputChange}
                 bottomActions={
                   // <Box>
