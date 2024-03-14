@@ -245,7 +245,7 @@ const Translation = () => {
               <TranslationForm
                 placeholder="Nhập đoạn dịch bằng tiếng Êđê"
                 title="Tiếng Ê-đê"
-                inputValue={trans.ede_text || ""}
+                inputValue={trans.correct_ede_text || trans.ede_text || ""}
                 onChange={handleEdeInputChange}
                 bottomActions={
                   // <Box>
