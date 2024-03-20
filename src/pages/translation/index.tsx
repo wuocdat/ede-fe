@@ -14,6 +14,7 @@ import { DATE_FORMATTER } from "@/utils/constants";
 import { useDebounce } from "@/hooks/useDebounce";
 import LoadingOverlay from "@/components/share/LoadingOverLay";
 import { PageDto } from "@/types/page.dto";
+import { AxiosError } from "axios";
 
 interface TranslationFormProps {
   title: string;
@@ -150,6 +151,9 @@ const Translation = () => {
       }
     } catch (error) {
       console.log(error);
+      if (error instanceof AxiosError && error.response?.data?.statusCode === 404) {
+        toast.info("Hết bản dịch");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -182,8 +186,8 @@ const Translation = () => {
   };
 
   const handleSave = async () => {
-    setIsLoading(true);
     if (trans && trans.vi_text && trans.correct_ede_text) {
+      setIsLoading(true);
       try {
         await TransService.updateTransById(trans.id, {
           vi_text: trans.vi_text,
